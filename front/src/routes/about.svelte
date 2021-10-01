@@ -1,18 +1,14 @@
 <!-- src/routes/about.svelte -->
 <script>
-    let characterName;
+    let name;
 
-    fetch('http://pitclub.bisapp.slim/')
+    fetch('http://pitclub.bisapp.slim/api')
         .then((response) => response.json())
-        .then((character) => {
-            characterName = character.name;
+        .then((data) => {
+            name = data
         })
 </script>
-
-<svelte:head>
-    <title>{characterName}</title>
-</svelte:head>
-
-<h1>About this site</h1>
-<p>TODO...</p>
+<main>
+    {name}
+</main>
 

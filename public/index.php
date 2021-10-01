@@ -7,8 +7,8 @@ require __DIR__ . '/../vendor/autoload.php';
 
 $app = AppFactory::create();
 
-$app->get('/', function (Request $request, Response $response, $args) {
-    $data = "Hello world!";
+$app->get('/api', function (Request $request, Response $response, $args) {
+    $data = ('hello world');
     $payload = json_encode($data);
     $response->getBody()->write($payload);
     return $response
