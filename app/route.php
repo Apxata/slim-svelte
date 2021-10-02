@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Controller\HomeController;
 use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
 use Psr\Http\Message\ResponseInterface;
@@ -12,6 +13,8 @@ return function (App $app) {
         $response->getBody()->write("Hello World");
         return $response;
     });
+
+    $app->get('/api/home', HomeController::class . ':home');
 
     $app->get('/user/{name}', function (RequestInterface $request, ResponseInterface $response, $args)
     {
