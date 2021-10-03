@@ -1,9 +1,13 @@
 <?php
+
 declare(strict_types=1);
 
 use App\Controller\HomeController;
 use DI\Container;
+use DI\ContainerBuilder;
 use Slim\Factory\AppFactory;
+
+http_response_code(500);
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -11,7 +15,13 @@ require __DIR__ . '/../vendor/autoload.php';
 //
 //$settings = require __DIR__ . '/../app/setting.php';
 //$settings($container);
-
+$builder = new ContainerBuilder();
+$builder->addDefinitions([
+    'config' => [
+        'debug' => true
+    ]
+]);
+$container = $builder->build();
 //$connection = require __DIR__ . '/../app/connection.php';
 //$connection($container);
 
@@ -22,8 +32,9 @@ require __DIR__ . '/../vendor/autoload.php';
 //AppFactory::setContainer($container);
 
 // Create App
-$app = AppFactory::create();
-$app->addErrorMiddleware(true, true, true);
+$app = AppFactory::createFromContainer($container);
+//$app = AppFactory::create();
+$app->addErrorMiddleware($container->get('config')['debug'], true, true);
 $app->get('/api/home', HomeController::class . ':home');
 //$views = require __DIR__ . '/../app/views.php';
 //$views($app);
