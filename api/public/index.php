@@ -2,10 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Controller\HomeController;
-use DI\Container;
-use DI\ContainerBuilder;
-use Slim\Factory\AppFactory;
+use Psr\Container\ContainerInterface;
 
 http_response_code(500);
 
@@ -15,13 +12,7 @@ require __DIR__ . '/../vendor/autoload.php';
 //
 //$settings = require __DIR__ . '/../app/setting.php';
 //$settings($container);
-$builder = new ContainerBuilder();
-$builder->addDefinitions([
-    'config' => [
-        'debug' => true
-    ]
-]);
-$container = $builder->build();
+
 //$connection = require __DIR__ . '/../app/connection.php';
 //$connection($container);
 
@@ -30,19 +21,24 @@ $container = $builder->build();
 
 // Set Container on app
 //AppFactory::setContainer($container);
-
+ /** @var  ContainerInterface $container */
+$container = require __DIR__ . '/../config/container.php';
 // Create App
-$app = AppFactory::createFromContainer($container);
+$app = (require __DIR__ .'/../config/app.php')($container);
+//var_dump($appFactory);
+//die();
+//$app = $appFactory($container);
 //$app = AppFactory::create();
-$app->addErrorMiddleware($container->get('config')['debug'], true, true);
-$app->get('/api/home', HomeController::class . ':home');
+
+
 //$views = require __DIR__ . '/../app/views.php';
 //$views($app);
 //
 //$middleware = require __DIR__ . '/../app/middleware.php';
 //$middleware($app);
-
-//$routes = require __DIR__ . '/../app/route.php';
+//$middleware = require __DIR__ . '/../config/middleware.php';
+//$middleware($app, $container);
+//$routes = require __DIR__ . '/../config/routes.php';
 //$routes($app);
 
 // Run App
