@@ -13,6 +13,9 @@ use stdClass;
 class HomeAction implements RequestHandlerInterface
 {
 
+    /**
+     * @throws \JsonException
+     */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         return new JsonResponse(new stdClass());

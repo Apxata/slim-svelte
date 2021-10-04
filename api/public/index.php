@@ -8,6 +8,8 @@ http_response_code(500);
 
 require __DIR__ . '/../vendor/autoload.php';
 
+require __DIR__ . '/../config/loader.php';
+
 //$container = new Container();
 //
 //$settings = require __DIR__ . '/../app/setting.php';

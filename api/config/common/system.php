@@ -2,21 +2,25 @@
 
 declare (strict_types=1);
 
-use Dotenv\Dotenv;
+use Monolog\Logger;
 
-include_once __DIR__ . '/../../vendor/autoload.php';
 
-$dotenv = Dotenv::createImmutable(dirname(dirname(__DIR__)));
-$dotenv->load();
-
-if ($_ENV['APP_ENV'] === 'DEV') {
+if ($_ENV['APP_ENV'] === 'dev') {
     $debug = true;
+    $level = Logger::DEBUG;
 } else {
     $debug = false;
+    $level = Logger::INFO;
 }
 
 return [
     'config' => [
-        'debug' => $debug
-    ],
+        'debug' => $debug,
+        'logger' =>
+             [
+                'name' => 'pitclub.bisapp.slim',
+                'path' => __DIR__ . '/../../logs/app.log',
+                'level' => $level,
+            ],
+     ]
 ];
