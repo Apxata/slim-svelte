@@ -22,7 +22,7 @@ return [
                 'path' => __DIR__ . '/../../logs/app.log',
                 'level' => $level,
             ],
-        'connection' => [
+        'connection_data' => [
             'host' => $_ENV['PDO_HOST'],
             'dbname' => $_ENV['PDO_DB_NAME'],
             'dbuser' => $_ENV['PDO_DB_USER'],

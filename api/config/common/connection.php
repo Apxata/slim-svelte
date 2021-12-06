@@ -2,26 +2,24 @@
 
 declare(strict_types=1);
 
-use DI\Container;
+use Psr\Container\ContainerInterface;
 
 return [
-    PDO::class => function (Container $container) {
-        $container->set('connection', function () use ($container) {
-            $connection = $container->get('settings')['connection'];
+    PDO::class => function (ContainerInterface $container) {
 
-            $host = $connection['host'];
-            $dbname = $connection['dbname'];
-            $dbuser = $connection['dbuser'];
-            $dbpass = $connection['dbpass'];
+        $connection = $container->get('system')['connection_data'];
+        $host = $connection['host'];
+        $dbname = $connection['dbname'];
+        $dbuser = $connection['dbuser'];
+        $dbpass = $connection['dbpass'];
+        $connect = [];
+        try {
+            $connect = new PDO("mysql:host={$host};dbname={$dbname}", $dbuser, $dbpass);
+            $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } catch (PDOException $e) {
+            echo "Connection failed: " . $e->getMessage();
+        }
 
-            try {
-                $connection = new PDO("mysql:host={$host};dbname={$dbname}", $dbuser, $dbpass);
-                $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            } catch (PDOException $e) {
-                echo "Connection failed: " . $e->getMessage();
-            }
-
-            return $connection;
-        });
+        return $connect;
     }
 ];
