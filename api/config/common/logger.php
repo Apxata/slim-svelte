@@ -10,7 +10,7 @@ use Psr\Container\ContainerInterface;
 
 return [
     LoggerInterface::class => function (ContainerInterface $container) {
-        $settings = $container->get('config')['logger'];
+        $settings = $container->get('system')['logger'];
 
         $logger = new Logger($settings['name']);
 

@@ -27,8 +27,31 @@ class HomeController
         array $args
     ): ResponseInterface
     {
-        $response->getBody()->write("Hello home" . $this->myService->sayHello());
+//        $response->getBody()->write("Hello home" . $this->myService->sayHello());
+        $data = 'Strannik';
+        $payload = json_encode($data);
 
-        return $response;
+        $response->getBody()->write($payload);
+
+        return $response
+            ->withHeader('Content-Type', 'application/json')
+            ->withStatus(200);
+    }
+
+    public function date(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
+    {
+//        $response->getBody()->write("Hello home" . $this->myService->sayHello());
+        $data = date('Y-m-d H:i:s');
+        $payload = json_encode($data);
+
+        $response->getBody()->write($payload);
+
+        return $response
+            ->withHeader('Content-Type', 'application/json')
+            ->withStatus(200);
     }
 }

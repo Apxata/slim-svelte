@@ -6,5 +6,6 @@ use Psr\Container\ContainerInterface;
 use Slim\App;
 
 return function (App $app, ContainerInterface $container): void {
-    $app->addErrorMiddleware($container->get('config')['debug'], true, true);
+    $app->addErrorMiddleware($container->get('system')['debug'], true, true);
+    $app->addBodyParsingMiddleware();
 };
