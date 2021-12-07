@@ -5,7 +5,7 @@
     let password;
     let password2;
     let result;
-    let error = '';
+    let errorPassword = '';
 
     function check_password() {
         if(password === password2) {
@@ -30,12 +30,12 @@
             const json = await response.json();
             result = JSON.stringify(json);
         } else {
-            error = 'Пароли не совпадают';
+            errorPassword = 'Пароли не совпадают';
         }
     }
 
     const onKeyPress = e => {
-        error ='';
+        errorPassword ='';
     };
 
 </script>
@@ -66,6 +66,11 @@
                     <div class="col-xl-5 col-md-8">
                         <form class="bg-white  rounded-5 shadow-5-strong p-5">
                             <!-- Email input -->
+                            {#if result }
+                            <div class="alert alert-secondary" role="alert">
+                                {result }
+                            </div>
+                            {/if}
                             <div class="form-outline mb-4">
                                 <input bind:value={email} type="email" id="form1Example1" class="form-control"/>
                                 <label class="form-label" for="form1Example1">Адрес почты</label>
@@ -81,7 +86,11 @@
                             <div class="form-outline mb-4">
                                 <input on:keypress={onKeyPress} bind:value={password2}  type="password" id="form2Example2" class="form-control"/>
                                 <label class="form-label" for="form2Example2">Введите пароль повторно</label>
-                                <div class="error"> {error}</div>
+                                {#if errorPassword }
+                                <div class="alert alert-danger" role="alert">
+                                    {errorPassword}
+                                </div>
+                                {/if}
                             </div>
 
                              <!-- Submit button -->
@@ -101,9 +110,6 @@
     <!-- Background image -->
 </header>
 <!--Main Navigation-->
-<pre>
-{result}
-</pre>
 <!--Footer-->
 <footer class="bg-light text-lg-start">
 

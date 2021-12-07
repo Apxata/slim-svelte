@@ -42,6 +42,7 @@ class RegisterController
     ): Response
     {
         try {
+            $message = [];
             $data = $request->getParsedBody();
             if($data) {
                 $email = $data['email'];
@@ -57,11 +58,17 @@ class RegisterController
                         '',
                         self::BASE_ROLE
                     );
+                    $message['success'] = 'Вы были успешно зарегистрированы';
+                } else {
+                    $message['error'] = $email . ' Адрес почты не уникальный';
+                    $this->logger->warning($message['error']);
                 }
             }
         } catch (Exception $exception) {
             $this->logger->critical($exception->getMessage());
         }
+
+        $response->getBody()->write(json_encode($message));
 
         return $response
             ->withHeader('Content-Type', 'application/json')
