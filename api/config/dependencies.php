@@ -7,6 +7,7 @@ $files = array_merge(
     glob(__DIR__. '/' . (getenv('APP_ENV') ?: 'prod') . '/*.php') ?: []
 );
 
+
 $configs = array_map(
     static function ($file) {
         return require $file;
@@ -15,4 +16,5 @@ $configs = array_map(
 );
 
 return array_merge_recursive(...$configs);
+//dd($ar);
 

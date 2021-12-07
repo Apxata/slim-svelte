@@ -27,6 +27,7 @@ return [
             'dbname' => $_ENV['PDO_DB_NAME'],
             'dbuser' => $_ENV['PDO_DB_USER'],
             'dbpass' => $_ENV['PDO_DB_PASS'],
+            'PDO_DB_PBC' => $_ENV['PDO_DB_PBC'],
         ]
      ]
 ];

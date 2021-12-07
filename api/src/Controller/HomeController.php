@@ -14,21 +14,18 @@ class HomeController
     private LoggerInterface $logger;
     private MyService $myService;
     private ContainerInterface $container;
-    private \PDO $connection;
     private GuestQuery $guestQuery;
 
     public function __construct(
         LoggerInterface $logger,
         MyService $myService,
         ContainerInterface $container,
-        \PDO $connection,
         GuestQuery $guestQuery
     )
     {
         $this->logger = $logger;
         $this->myService = $myService;
         $this->container = $container;
-        $this->connection = $connection;
         $this->guestQuery = $guestQuery;
     }
 
@@ -39,8 +36,9 @@ class HomeController
     ): ResponseInterface
     {
 //        $response->getBody()->write("Hello home" . $this->myService->sayHello());
-        $data = 'Strannik';
-        $payload = json_encode($data);
+        $data = $this->guestQuery->getAllGuests();
+        $items = $this->guestQuery->get100items();
+        $payload = json_encode($data) . json_encode($items);
 
         $response->getBody()->write($payload);
 //        $connection = $this->container->get('connection');
@@ -53,10 +51,6 @@ class HomeController
 //                )";
 //
 //        $res = $this->connection->exec($sql);
-        $res = $this->guestQuery->getAllGuests();
-        echo '<pre>';
-        print_r($res[0]);
-        die();
 
         return $response
             ->withHeader('Content-Type', 'application/json')
