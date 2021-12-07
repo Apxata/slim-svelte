@@ -1,23 +1,43 @@
 <!-- src/routes/login.svelte -->
 <script>
+
     let email;
     let password;
+    let password2;
     let result;
+    let error = '';
 
-     async function doLogin() {
-        const response = await fetch('http://pitclub.bisapp.slim/api/login', {
-            method: "POST",
-            body: JSON.stringify({
-                email,
-                password
-            }),
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-         const json = await response.json();
-         result = JSON.stringify(json);
+    function check_password() {
+        if(password === password2) {
+            return true;
+        } else {
+            return false;
+        }
     }
+
+     async function doRegister() {
+        if(check_password() === true) {
+            const response = await fetch('http://pitclub.bisapp.slim/api/register', {
+                method: "POST",
+                body: JSON.stringify({
+                    email,
+                    password
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            const json = await response.json();
+            result = JSON.stringify(json);
+        } else {
+            error = 'Пароли не совпадают';
+        }
+    }
+
+    const onKeyPress = e => {
+        error ='';
+    };
+
 </script>
 <header>
     <style>
@@ -57,32 +77,19 @@
                                 <label class="form-label" for="form1Example2">Пароль</label>
                             </div>
 
-                            <!-- 2 column grid layout for inline styling -->
-                            <div class="row mb-4">
-                                <div class="col d-flex justify-content-center">
-                                    <!-- Checkbox -->
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="form1Example3"
-                                               checked/>
-                                        <label class="form-check-label" for="form1Example3">
-                                            Запомнить
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="col text-center">
-                                    <!-- Simple link -->
-                                    <a href="#!">Забыли пароль</a>
-                                </div>
+                            <!-- Password verify -->
+                            <div class="form-outline mb-4">
+                                <input on:keypress={onKeyPress} bind:value={password2}  type="password" id="form2Example2" class="form-control"/>
+                                <label class="form-label" for="form2Example2">Введите пароль повторно</label>
+                                <div class="error"> {error}</div>
                             </div>
 
-                            <!-- Submit button -->
-                            <button on:click|preventDefault={doLogin} type="submit" class="btn btn-primary btn-block">Войти</button>
-
+                             <!-- Submit button -->
+                            <button on:click|preventDefault={doRegister} type="submit" class="btn btn-primary btn-block">Зарегаться</button>
                             <div class="row mt-4">
                                 <div class="col text-center">
                                     <!-- Simple link -->
-                                    <a href="register">Зарегаться</a>
+                                    <a href="login">Войти</a>
                                 </div>
                             </div>
                         </form>

@@ -2,9 +2,9 @@
 
 declare (strict_types=1);
 
+use App\Controller\Access\LoginController;
+use App\Controller\Access\RegisterController;
 use App\Controller\HomeController;
-use App\Controller\LoginController;
-use App\Http\Action\HomeAction;
 use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -16,6 +16,7 @@ return function (App $app) {
 
         $group->get('/home', HomeController::class . ':home');
         $group->post('/login', LoginController::class . ':login');
+        $group->post('/register', RegisterController::class . ':register');
 
         $group->get('/date', function (Request $request, Response $response) {
             $response->getBody()->write(date('Y-m-d H:i:s'));

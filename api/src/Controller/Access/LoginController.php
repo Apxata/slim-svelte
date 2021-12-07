@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Access;
 
 use App\Service\MyService;
 use Psr\Log\LoggerInterface;

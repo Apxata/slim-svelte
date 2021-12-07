@@ -35,22 +35,13 @@ class HomeController
         array $args
     ): ResponseInterface
     {
-//        $response->getBody()->write("Hello home" . $this->myService->sayHello());
+
         $data = $this->guestQuery->getAllGuests();
         $items = $this->guestQuery->get100items();
         $payload = json_encode($data) . json_encode($items);
 
         $response->getBody()->write($payload);
-//        $connection = $this->container->get('connection');
-//        $sql = "CREATE TABLE IF NOT EXISTS MyGuests (
-//                id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-//                firstname VARCHAR(30) NOT NULL,
-//                lastname VARCHAR(30) NOT NULL,
-//                email VARCHAR(50),
-//                reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-//                )";
-//
-//        $res = $this->connection->exec($sql);
+
 
         return $response
             ->withHeader('Content-Type', 'application/json')
@@ -63,7 +54,6 @@ class HomeController
         array $args
     ): ResponseInterface
     {
-//        $response->getBody()->write("Hello home" . $this->myService->sayHello());
         $data = date('Y-m-d H:i:s');
         $payload = json_encode($data);
 
