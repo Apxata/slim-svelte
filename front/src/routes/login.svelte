@@ -1,8 +1,10 @@
 <!-- src/routes/login.svelte -->
 <script>
+    import {flashMessage} from "../stores/store";
     let email;
     let password;
     let result;
+
 
      async function doLogin() {
         const response = await fetch('http://pitclub.bisapp.slim/api/login', {
@@ -15,8 +17,7 @@
                 'Content-Type': 'application/json',
             },
         });
-         const json = await response.json();
-         result = JSON.stringify(json);
+         result = await response.json();
     }
 </script>
 <header>
@@ -45,7 +46,12 @@
                 <div class="row justify-content-center">
                     <div class="col-xl-5 col-md-8">
                         <form class="bg-white  rounded-5 shadow-5-strong p-5">
-                            <!-- Email input -->
+<!--                             Email input -->
+                            {#if $flashMessage.success }
+                                <div class="alert alert-success" role="alert">
+                                    {$flashMessage.success}
+                                </div>
+                            {/if}
                             <div class="form-outline mb-4">
                                 <input bind:value={email} type="email" id="form1Example1" class="form-control"/>
                                 <label class="form-label" for="form1Example1">Адрес почты</label>
@@ -94,9 +100,8 @@
     <!-- Background image -->
 </header>
 <!--Main Navigation-->
-<pre>
-{result}
-</pre>
+<h1>Theme: {$flashMessage.success}</h1>
+<h1>Theme: {$flashMessage.error}</h1>
 <!--Footer-->
 <footer class="bg-light text-lg-start">
 
