@@ -48,11 +48,11 @@ class LoginController
                 $email = $loginData['email'];
                 $password = $loginData['password'];
 
-                $data = $this->getByEmail($email);
-                if($data) {
-                    $password_verify = password_verify($password, $data['password_hash']);
+                $userData = $this->getByEmail($email);
+                if($userData) {
+                    $password_verify = password_verify($password, $userData['password_hash']);
                     if($password_verify === true) {
-                        $user_id = (int)$data['id'];
+                        $user_id = (int) $userData['id'];
                         $token = $this->createToken($user_id);
                     } else {
                         // TODO password or email wrong
