@@ -1,6 +1,7 @@
 <!-- src/routes/login.svelte -->
 <script>
     import {flashMessage} from "../stores/store";
+    import {goto} from "$app/navigation";
     let email;
     let password;
     let result;
@@ -18,6 +19,10 @@
             },
         });
          result = await response.json();
+         if(result.success) {
+             localStorage.setItem('MyDear', result.token);
+             goto('/admin')
+         }
     }
 </script>
 <header>
@@ -47,6 +52,9 @@
                     <div class="col-xl-5 col-md-8">
                         <form class="bg-white  rounded-5 shadow-5-strong p-5">
 <!--                             Email input -->
+                            {#if result }
+                              {result.success}
+                            {/if}
                             {#if $flashMessage.success }
                                 <div class="alert alert-success" role="alert">
                                     {$flashMessage.success}

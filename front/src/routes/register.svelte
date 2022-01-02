@@ -22,7 +22,7 @@
 
     async function doRegister() {
         if (check_password() === true) {
-            const response = await fetch('http://pitclub.bisapp.slim/api/register', {
+            const response = await fetch('api/register', {
                 method: "POST",
                 body: JSON.stringify({
                     email,

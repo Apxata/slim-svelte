@@ -9,6 +9,7 @@ use App\Model\Access\RegisterQuery;
 use App\Service\MyService;
 use Exception;
 use Psr\Log\LoggerInterface;
+use Ramsey\Uuid\Uuid;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 
@@ -40,10 +41,9 @@ class LoginController
     ): Response
     {
 
+        $message = [];
         try {
-            $token = '';
             $loginData = $request->getParsedBody();
-
             if ($loginData) {
                 $email = $loginData['email'];
                 $password = $loginData['password'];
@@ -54,6 +54,8 @@ class LoginController
                     if($password_verify === true) {
                         $user_id = (int) $userData['id'];
                         $token = $this->createToken($user_id);
+                        $message['success'] = 'Вы успешно вошли';
+                        $message['token'] = $token;
                     } else {
                         // TODO password or email wrong
                     }
@@ -66,7 +68,7 @@ class LoginController
             $this->logger->critical($exception->getMessage());
         }
 
-        $response->getBody()->write(json_encode($token));
+        $response->getBody()->write(json_encode($message));
         return $response
             ->withHeader('Content-Type', 'application/json')
             ->withStatus(200);
@@ -82,7 +84,7 @@ class LoginController
      */
     private function createToken(int $user_id): string
     {
-        $token = random_bytes(128);
+        $token = Uuid::uuid4()->toString();
         $date_create = date('Y-m-d H:i:s');
         $date_expired = strtotime($date_create."+ 30 days");
         $date_expired = date('Y-m-d H:i:s', $date_expired);

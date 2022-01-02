@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use App\Model\Guest\GuestQuery;
-use App\MyResponse;
 use App\Service\MyService;
+use Picqer\Barcode\BarcodeGeneratorSVG;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -45,7 +45,7 @@ class HomeController
      */
     public function home(
         ServerRequestInterface $request,
-        MyResponse $response,
+        Response $response,
         array $args
     ): ResponseInterface
     {
@@ -54,14 +54,25 @@ class HomeController
 //        $items = $this->guestQuery->get100items();
 //        $payload = json_encode($data) . json_encode($items);
         $name = 'braen';
+//        $code = Barcoder::ean8('0147400000440')->toSvg();
+        $generator = new BarcodeGeneratorSVG();
+        $code = '081231723897';
+        $redColor = [255, 0, 0];
+        $barcodeEAN = $generator->getBarcode($code, $generator::TYPE_EAN_13,1, 40, 'black');
+        $barcode128 = $generator->getBarcode($code, $generator::TYPE_CODE_128, 1, 40, 'black');
 
-       return $response->render('home.twig', ['name' => $name]);
+//        dd($code);
+//       return $response->render('home.twig', ['name' => $name]);
 
-//        $response->getBody()->write(
-//            $this->twig->render('home.twig', ['name' => $name])
-//        );
+        $response->getBody()->write(
+            $this->twig->render('home.twig', [
+                'code' => $code,
+                'barcodeEAN' => $barcodeEAN,
+                'barcode128' => $barcode128
+            ])
+        );
 
-//        return $response;
+        return $response;
 //            ->withHeader('Content-Type', 'application/json')
 //            ->withStatus(200);
     }
