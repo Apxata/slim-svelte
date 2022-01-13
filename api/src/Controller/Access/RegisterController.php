@@ -19,7 +19,7 @@ class RegisterController
     private ContainerInterface $container;
     private RegisterQuery $registerQuery;
     private RegisterCommand $registerCommand;
-    CONST BASE_ROLE = 'newcomer';
+    const BASE_ROLE = 'newcomer';
 
 
     public function __construct(
@@ -44,18 +44,19 @@ class RegisterController
         try {
             $message = [];
             $data = $request->getParsedBody();
-            if($data) {
+            if ($data) {
                 $email = $data['email'];
                 $password = $data['password'];
+                $nickname = $data['name'];
 
-                if($this->isUnique($email)) {
-                    $password_hash = password_hash($password , PASSWORD_BCRYPT);
+                if ($this->isUnique($email)) {
+                    $password_hash = password_hash($password, PASSWORD_BCRYPT);
                     $date_create = date('Y-m-d H:i:s');
                     $this->registerCommand->register(
                         $email,
                         $password_hash,
                         $date_create,
-                        '',
+                        $nickname,
                         self::BASE_ROLE
                     );
                     $message['success'] = 'Вы были успешно зарегистрированы';
@@ -94,10 +95,58 @@ class RegisterController
     private function isUnique(string $email): bool
     {
         $email = $this->registerQuery->getByEmail($email);
-        if($email) {
+        if ($email) {
             return false;
         } else {
             return true;
         }
+    }
+
+    public function register_simple(
+        Request $request,
+        Response $response,
+        array $args): Response
+    {
+        try {
+            $response_message = [];
+            $data = $request->getParsedBody();
+            if ($data) {
+                $email = $data['email'];
+                $password = $data['password'];
+                $nickname = $data['name'];
+
+                if ($this->isUnique($email)) {
+                    $password_hash = password_hash($password, PASSWORD_BCRYPT);
+                    $date_create = date('Y-m-d H:i:s');
+                    $this->registerCommand->register(
+                        $email,
+                        $password_hash,
+                        $date_create,
+                        $nickname,
+                        self::BASE_ROLE
+                    );
+                    $message['success'] = 'Вы были успешно зарегистрированы';
+                } else {
+                    $response_message = [
+                        'status' => 409,
+                        'body' => 'User already exist'
+                    ];
+                    $this->logger->warning('Пользователь уже есть');
+                    $response->getBody()->write(json_encode($response_message));
+
+                    return $response;
+                }
+            }
+        } catch (Exception $exception) {
+            $this->logger->critical($exception->getMessage());
+        }
+
+        $response->getBody()->write(json_encode($response_message));
+
+        $session = session_start();
+
+        return $response
+            ->withHeader('Content-Type', 'application/json')
+            ->withStatus(200);
     }
 }

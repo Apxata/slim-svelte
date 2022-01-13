@@ -16,7 +16,9 @@ return function (App $app) {
 
         $group->get('/home', HomeController::class . ':home');
         $group->post('/login', LoginController::class . ':login');
+        $group->post('/login', LoginController::class . ':login');
         $group->post('/register', RegisterController::class . ':register');
+        $group->post('/register_simple', RegisterController::class . ':register_simple');
 
         $group->get('/date', function (Request $request, Response $response) {
             $response->getBody()->write(date('Y-m-d H:i:s'));
