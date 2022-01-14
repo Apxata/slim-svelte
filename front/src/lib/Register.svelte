@@ -11,7 +11,7 @@
     async function register() {
         error = '';
         try {
-            const res = await fetch('/api/register', {
+            const res = await fetch('/api/register_simple', {
                 method: 'POST',
                 body: JSON.stringify({
                     email,

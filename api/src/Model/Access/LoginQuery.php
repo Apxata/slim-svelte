@@ -5,10 +5,11 @@ namespace App\Model\Access;
 
 
 use App\Database\PDO2;
+use App\Model\BaseQuery;
 use PDO;
 use Psr\Log\LoggerInterface;
 
-class LoginQuery
+class LoginQuery extends BaseQuery
 {
     private PDO $conn;
     private PDO2 $conn2;
@@ -25,12 +26,22 @@ class LoginQuery
         $this->logger = $logger;
     }
 
-    public function getByEmail(string $email): array
+    public function getByEmail(string $email): array|bool
     {
         $sql = 'SELECT * FROM users WHERE email = :email ';
         $stmt = $this->conn->prepare($sql);
         $stmt->execute(['email' => $email]);
 
-        return $stmt->fetch();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+
+    }
+
+    public function findByToken($token): array|bool
+    {
+        $sql = 'SELECT * FROM user_token WHERE token = :token ORDER BY id DESC ';
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute(['token' => $token]);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }

@@ -55,6 +55,7 @@ class HomeController
 //        $payload = json_encode($data) . json_encode($items);
         $name = 'braen';
 //        $code = Barcoder::ean8('0147400000440')->toSvg();
+
         $generator = new BarcodeGeneratorSVG();
         $code = '081231723897';
         $redColor = [255, 0, 0];

@@ -5,6 +5,7 @@ namespace App\Controller\Access;
 
 use App\Model\Access\RegisterCommand;
 use App\Model\Access\RegisterQuery;
+use App\Service\AuthService;
 use Cassandra\Date;
 use DateTime;
 use Exception;
@@ -12,6 +13,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\LoggerInterface;
+use Ramsey\Uuid\Uuid;
 
 class RegisterController
 {
@@ -20,19 +22,22 @@ class RegisterController
     private RegisterQuery $registerQuery;
     private RegisterCommand $registerCommand;
     const BASE_ROLE = 'newcomer';
+    private AuthService $authService;
 
 
     public function __construct(
         LoggerInterface $logger,
         ContainerInterface $container,
         RegisterQuery $registerQuery,
-        RegisterCommand $registerCommand
+        RegisterCommand $registerCommand,
+        AuthService $authService
     )
     {
         $this->logger = $logger;
         $this->container = $container;
         $this->registerQuery = $registerQuery;
         $this->registerCommand = $registerCommand;
+        $this->authService = $authService;
     }
 
     public function register(
@@ -141,9 +146,12 @@ class RegisterController
             $this->logger->critical($exception->getMessage());
         }
 
-        $response->getBody()->write(json_encode($response_message));
-
-        $session = session_start();
+//       $cookieId = Uuid::uuid4()->toString();
+//       $_SESSION['user_id'] = $cookieId;
+//       $max_age = time() + (60 * 60 * 24 * 30);
+//       setcookie('session_id', $cookieId, $max_age, "/");
+       $this->authService->setAuthCookie();
+       $response->getBody()->write(json_encode(['message' => 'Success']));
 
         return $response
             ->withHeader('Content-Type', 'application/json')

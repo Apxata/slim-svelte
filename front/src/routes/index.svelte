@@ -29,8 +29,8 @@
 
 <main>
     <h1>Auth with Cookie in SvelteKit</h1>
-    <Login on:succeess={redirectToProfile}></Login>
-    <Register on:succeess={redirectToProfile}></Register>
+    <Login on:success={redirectToProfile}/>
+    <Register on:success={redirectToProfile}/>
 
 </main>
 <!--Footer-->
