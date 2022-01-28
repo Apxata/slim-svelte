@@ -1,38 +1,125 @@
-# create-svelte
+# Svelte template with Tailwind CSS
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte);
+<br>
 
-## Creating a project
+<div style="display:flex">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Svelte_Logo.svg/199px-Svelte_Logo.svg.png" />
+  <img src="https://seeklogo.com/images/T/tailwind-css-logo-5AD4175897-seeklogo.com.png" />
+</div>
 
-If you're seeing this, you've probably already done this step. Congrats!
+<br>
 
-```bash
-# create a new project in the current directory
-npm init svelte@next
+## Install Tailwind CSS with Svelte
 
-# create a new project in my-app
-npm init svelte@next my-app
+Setting up Tailwind CSS in a Svelte project.
+
+<ol>
+  <li>
+    <p>Install necessary dependencies:</p>
+
+```sh
+npm i -D svelte-preprocess tailwindcss postcss autoprefixer
 ```
 
-> Note: the `@next` is temporary
+  </li>
+  <li>
+    <p>Run the init command to generate the <code>tailwind.config.js</code> file:</p>
 
-## Developing
+```sh
+npx tailwindcss init
+```
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+  </li>
+  <li>
+    <p>Configure <b>svelte-preprocess</b> in your <code>rollup.config.js</code> file:</p>
+
+```js
+// ...
+import sveltePreprocess from 'svelte-preprocess'
+
+// ...
+
+export default {
+  // ...
+  plugins: [
+    svelte({
+      // ...
+      preprocess: sveltePreprocess({
+        sourceMap: !production,
+        postcss: {
+          plugins: [require('tailwindcss')(), require('autoprefixer')()],
+        },
+      }),
+    }),
+    // ...
+  ],
+  // ...
+}
+```
+
+  </li>
+  <li>
+    <p>Add the Tailwind directives to your <code>App.svelte</code>:</p>
+
+```svelte
+<script>
+  export let name;
+</script>
+
+<main>
+  <h1>Hello {name}!</h1>
+  <p> Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
+</main>
+
+<style lang="postcss" global>
+  @tailwind base;
+  @tailwind components;
+  @tailwind utilities;
+</style>
+```
+
+  </li>
+  <li>
+    <p>Finally, add the paths to all of your template files in your <code>tailwind.config.js</code> file:</p>
+    
+```js
+module.exports = {
+  content: ['./public/index.html', './src/**/*.svelte'],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+```
+  </li>
+</ol>
+
+<br>
+
+## Get started
+
+Install the dependencies...
+
+```bash
+npm install
+```
+
+...then start [Rollup](https://rollupjs.org):
 
 ```bash
 npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
 ```
 
-## Building
-
-Before creating a production version of your app, install an [adapter](https://kit.svelte.dev/docs#adapters) for your target environment. Then:
+### Building and running in production mode
 
 ```bash
 npm run build
 ```
 
-> You can preview the built app with `npm run preview`, regardless of whether you installed an adapter. This should _not_ be used to serve your app in production.
+### Using TypeScript
+
+This template comes with a script to set up a TypeScript development environment, run:
+
+```bash
+node scripts/setupTypeScript.js
+```
